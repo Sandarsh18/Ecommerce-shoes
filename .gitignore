@@ -1,0 +1,10 @@
+# Flutter files
+build/
+.dart_tool/
+.packages
+.pub-cache/
+.idea/
+.vscode/
+*.iml
+android/.gradle/
+flutter_*.png
