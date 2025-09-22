@@ -93,7 +93,7 @@ This project is a **complete e-commerce shoe store application** that demonstrat
 graph TB
     A[👤 User] --> B[📱 UI Layer]
     
-    subgraph "🖼️ Presentation Layer"
+    subgraph "Presentation Layer"
         B --> C[🏠 HomePage]
         B --> D[👟 ShoesPage]
         B --> E[💖 FavoritesPage]
@@ -101,12 +101,12 @@ graph TB
         B --> G[🔔 NotificationsPage]
     end
     
-    subgraph "🔄 State Management Layer"
+    subgraph "State Management"
         H[📊 AppData Singleton]
         I[⚡ StatefulWidget States]
     end
     
-    subgraph "📂 Data Layer"
+    subgraph "Data Layer"
         J[👟 Shoe Model]
         K[🖼️ Assets]
         L[🎯 Local State]
@@ -121,11 +121,6 @@ graph TB
     H --> J
     H --> K
     H --> L
-    
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style H fill:#e8f5e8
-    style J fill:#fff3e0
 ```
 
 ### 📂 **Enhanced File Structure**
@@ -168,38 +163,32 @@ classDiagram
         +String category
         +int price
         +bool isFavorite
-        +Shoe()
     }
     
     class AppData {
-        -List~Shoe~ _favorites
-        -List~Shoe~ _cart
-        +List~Shoe~ shoes
-        +List~Shoe~ favorites
-        +List~Shoe~ cart
+        -List favorites
+        -List cart
+        +List shoes
         +int cartCount
-        +toggleFavorite(String tag)
-        +addToCart(String tag)
-        +removeFromCart(String tag)
+        +toggleFavorite()
+        +addToCart()
+        +removeFromCart()
     }
     
     class HomePage {
         +String selectedCategory
         +String searchQuery
-        +List~String~ categories
+        +List categories
         +AppData appData
-        +toggleFavorite(String tag)
-        +addToCart(String tag)
-        +List~Shoe~ filteredShoes
     }
     
-    AppData "1" *-- "many" Shoe : manages
-    HomePage "1" --> "1" AppData : uses
-    FavoritesPage "1" --> "1" AppData : uses
-    CartPage "1" --> "1" AppData : uses
+    AppData "1" *-- "many" Shoe
+    HomePage "1" --> "1" AppData
+    FavoritesPage "1" --> "1" AppData
+    CartPage "1" --> "1" AppData
 ```
 
-### 🛣️ **Navigation Flow Diagram**
+### 🛣️ **Navigation Flow**
 
 ```mermaid
 graph LR
@@ -214,42 +203,29 @@ graph LR
     D --> A
     D --> B
     E --> A
-    
-    subgraph "🎯 Navigation Routes"
-        F["/ → HomePage"]
-        G["/favorites → FavoritesPage"]
-        H["/cart → CartPage"]
-        I["/notifications → NotificationsPage"]
-    end
-    
-    style A fill:#e3f2fd
-    style B fill:#f1f8e9
-    style C fill:#fce4ec
-    style D fill:#fff3e0
-    style E fill:#f3e5f5
 ```
 
 ### 🔄 **State Management Flow**
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 User
-    participant UI as 🖼️ UI Component
-    participant S as 📊 AppData State
-    participant M as 👟 Shoe Model
+    participant User
+    participant UI
+    participant AppData
+    participant Model
     
-    U->>UI: 💖 Tap Favorite
-    UI->>S: toggleFavorite(tag)
-    S->>M: Update isFavorite
-    M-->>S: State Updated
-    S-->>UI: Notify Change
-    UI-->>U: 🎨 Update UI
+    User->>UI: Tap Favorite
+    UI->>AppData: toggleFavorite()
+    AppData->>Model: Update isFavorite
+    Model-->>AppData: State Updated
+    AppData-->>UI: Notify Change
+    UI-->>User: Update UI
     
-    U->>UI: 🛒 Add to Cart
-    UI->>S: addToCart(tag)
-    S->>S: Add to _cart list
-    S-->>UI: Update cartCount
-    UI-->>U: 📱 Show Snackbar
+    User->>UI: Add to Cart
+    UI->>AppData: addToCart()
+    AppData->>AppData: Add to cart list
+    AppData-->>UI: Update cartCount
+    UI-->>User: Show Confirmation
 ```
 
 ---
@@ -378,76 +354,9 @@ graph LR
 | ✅ Animated transitions | ✅ Hero animations | ✅ Empty state handling | ✅ Cart management |
 | ✅ Real-time search | ✅ Gradient overlays | ✅ Remove favorites | ✅ Checkout dialog |
 
-### 🎥 **Interactive Features Flow**
 
-```mermaid
-sequenceDiagram
-    participant U as 👤 User
-    participant H as 🏠 Home
-    participant P as 👟 Product
-    participant F as 💖 Favorites
-    participant C as 🛒 Cart
-    
-    Note over U,C: 🔍 Search & Discovery
-    U->>H: Type in search bar
-    H->>H: Filter products real-time
-    H->>U: Show filtered results
-    
-    Note over U,C: 📱 Product Interaction
-    U->>H: Tap product card
-    H->>P: Hero animation transition
-    P->>U: Show product details
-    
-    Note over U,C: 💖 Favorites Management
-    U->>P: Tap favorite icon
-    P->>F: Add to favorites
-    F->>U: Heart animation feedback
-    
-    Note over U,C: 🛒 Cart Operations
-    U->>P: Select size & add to cart
-    P->>C: Add item with size
-    C->>U: Show snackbar confirmation
-    
-    Note over U,C: 💳 Purchase Flow
-    U->>C: Tap checkout
-    C->>C: Calculate total
-    C->>U: Show order confirmation
-```
 
-### 🎨 **Visual Design System**
 
-```mermaid
-graph TD
-    A[🎨 Design System] --> B[🎯 Color Palette]
-    A --> C[📝 Typography]
-    A --> D[🔲 Components]
-    A --> E[🎪 Animations]
-    
-    B --> F[⚫ Primary: Black]
-    B --> G[⚪ Secondary: White]
-    B --> H[🔵 Accent: Blue]
-    B --> I[❤️ Error: Red]
-    
-    C --> J[📱 Headers: Bold 24px]
-    C --> K[📝 Body: Regular 16px]
-    C --> L[🏷️ Caption: Light 12px]
-    
-    D --> M[🎴 Product Cards]
-    D --> N[🔘 Action Buttons]
-    D --> O[📋 List Items]
-    D --> P[🔍 Search Bar]
-    
-    E --> Q[⚡ FadeInUp]
-    E --> R[🦸 Hero Transitions]
-    E --> S[📏 Scale Effects]
-    E --> T[🌊 Slide Animations]
-    
-    style A fill:#e3f2fd
-    style B fill:#fff3e0
-    style C fill:#e8f5e8
-    style D fill:#fce4ec
-    style E fill:#f3e5f5
-```
 
 ### 🔄 **App State Transitions**
 
@@ -486,137 +395,7 @@ stateDiagram-v2
 
 ## 🔧 Technical Implementation
 
-### 🎯 **State Management Architecture**
-
-```mermaid
-graph TD
-    A[🎯 AppData Singleton] --> B[📱 HomePage State]
-    A --> C[💖 FavoritesPage State]
-    A --> D[🛒 CartPage State]
-    
-    subgraph "🔄 State Updates"
-        E[👆 User Action] --> F[📊 setState()]
-        F --> G[🔄 AppData Update]
-        G --> H[🎨 UI Rebuild]
-    end
-    
-    subgraph "📊 Data Persistence"
-        I[🏠 Local State]
-        J[💾 Session Storage]
-        K[🔄 Runtime Memory]
-    end
-    
-    A --> I
-    A --> J
-    A --> K
-    
-    style A fill:#e8f5e8
-    style E fill:#fff3e0
-    style I fill:#f3e5f5
-```
-
-### 🎨 **Animation Implementation Flow**
-
-```mermaid
-graph LR
-    A[📱 Widget Mount] --> B[⏱️ Animation Init]
-    B --> C[🎬 animate_do Setup]
-    C --> D[⚡ FadeInUp Start]
-    D --> E[🎯 Staggered Timing]
-    E --> F[🎨 Visual Effect]
-    
-    subgraph "🎭 Animation Types"
-        G[📈 FadeInUp Grid Items]
-        H[🦸 Hero Transitions]
-        I[📏 Scale Category Buttons]
-        J[🌊 Slide Animations]
-    end
-    
-    F --> G
-    F --> H
-    F --> I
-    F --> J
-    
-    style A fill:#e1f5fe
-    style F fill:#e8f5e8
-```
-
-### 🔍 **Search & Filter System**
-
-```mermaid
-flowchart TD
-    A[🔍 User Input] --> B{📝 Search Query?}
-    B -->|Yes| C[📊 Filter by Text]
-    B -->|No| D[🏷️ Category Filter]
-    
-    C --> E[🔤 Text Matching]
-    D --> F[📂 Category Matching]
-    
-    E --> G[🎯 Combined Filter]
-    F --> G
-    
-    G --> H[📱 Update Grid]
-    H --> I[🎨 Animate Results]
-    
-    subgraph "🔍 Filter Logic"
-        J["brand.toLowerCase().contains(query)"]
-        K["category == selectedCategory"]
-        L["matchCategory && matchSearch"]
-    end
-    
-    E --> J
-    F --> K
-    G --> L
-    
-    style A fill:#fff3e0
-    style G fill:#e8f5e8
-    style I fill:#f3e5f5
-```
-
-### 💾 **Data Flow Architecture**
-
-```mermaid
-graph TB
-    subgraph "📱 Presentation Layer"
-        A[🖼️ UI Components]
-        B[🎨 Animation Widgets]
-        C[⚡ StatefulWidgets]
-    end
-    
-    subgraph "🔄 Business Logic"
-        D[📊 AppData Manager]
-        E[🎯 Filter Logic]
-        F[🛒 Cart Operations]
-        G[💖 Favorites Logic]
-    end
-    
-    subgraph "📂 Data Models"
-        H[👟 Shoe Model]
-        I[📋 Categories List]
-        J[🖼️ Asset References]
-    end
-    
-    A --> D
-    B --> D
-    C --> D
-    
-    D --> E
-    D --> F
-    D --> G
-    
-    E --> H
-    F --> H
-    G --> H
-    
-    H --> I
-    H --> J
-    
-    style A fill:#e3f2fd
-    style D fill:#e8f5e8
-    style H fill:#fff3e0
-```
-
-### 🎨 **Component Architecture**
+###  **Component Architecture**
 
 ```dart
 // 🎯 Staggered grid animations with timing control
@@ -650,45 +429,133 @@ List<Shoe> get filteredShoes {
 }
 ```
 
-### 🧩 **Widget Composition Pattern**
+---
 
-```mermaid
-graph TD
-    A[🏠 HomePage] --> B[📱 Scaffold]
-    B --> C[📋 AppBar]
-    B --> D[📜 ScrollView]
-    
-    D --> E[🏷️ Category Row]
-    D --> F[🔍 Search Bar]
-    D --> G[📊 Product Grid]
-    
-    G --> H[🎴 Product Card]
-    H --> I[🖼️ Hero Image]
-    H --> J[📝 Product Info]
-    H --> K[💖 Favorite Button]
-    H --> L[🛒 Cart Button]
-    
-    subgraph "🎨 Reusable Components"
-        M[🎪 Category Button]
-        N[⭐ Rating Widget]
-        O[💰 Price Display]
-        P[🎯 Action Button]
-    end
-    
-    E --> M
-    J --> N
-    J --> O
-    K --> P
-    L --> P
-    
-    style A fill:#e3f2fd
-    style H fill:#f1f8e9
-    style M fill:#fff3e0
+## � Getting Started
+
+### 📋 **Prerequisites**
+- **Flutter SDK**: `>=3.0.6` (latest stable)
+- **Dart SDK**: `>=3.0.0`
+- **IDE**: Android Studio, VS Code, or IntelliJ
+- **Device**: Physical device or emulator
+
+### ⚙️ **Installation Steps**
+
+1. **📥 Clone the Repository**
+```bash
+git clone https://github.com/Sandarsh18/ecommerce-shoes.git
+cd ecommerce-shoes
+```
+
+2. **📦 Install Dependencies**
+```bash
+flutter pub get
+```
+
+3. **🔍 Verify Installation**
+```bash
+flutter doctor
+```
+
+4. **▶️ Run the Application**
+```bash
+# For development
+flutter run
+
+# For release build (Android)
+flutter build apk --release
+
+# For release build (iOS)
+flutter build ios --release
 ```
 
 ---
 
-## 🛠️ Development Workflow
+## 🤝 Contributing
+
+### 🎯 **How to Contribute**
+1. **🍴 Fork** the repository
+2. **🌟 Create** a feature branch (`git checkout -b feature/AmazingFeature`)
+3. **💡 Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
+4. **📤 Push** to the branch (`git push origin feature/AmazingFeature`)
+5. **🔄 Open** a Pull Request
+
+### 📋 **Contribution Guidelines**
+- Follow **Flutter style guide**
+- Add **comments** for complex logic
+- Include **tests** for new features
+- Update **documentation** as needed
+- Ensure **no breaking changes**
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2024 Sandarsh18
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software.
+```
+
+---
+
+## 👤 Author
+
+**Sandarsh18**
+- 🌐 GitHub: [@Sandarsh18](https://github.com/Sandarsh18)
+- 📧 Email: [your-email@example.com](mailto:your-email@example.com)
+- 💼 LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
+
+---
+
+## 🙏 Acknowledgments
+
+- 🎨 **Flutter Team** - For the amazing framework
+- 📦 **animate_do** - For smooth animation package
+- 🎯 **Material Design** - For design guidelines
+- 👥 **Flutter Community** - For inspiration and support
+- 🖼️ **Image Assets** - Product images used in the app
+
+---
+
+## 📞 Support
+
+### 🆘 **Need Help?**
+- 📖 **Documentation**: Check Flutter docs
+- 💬 **Issues**: Create a GitHub issue
+- 🤔 **Questions**: Start a discussion
+- 📧 **Contact**: Reach out via email
+
+### 🐛 **Found a Bug?**
+Please create an issue with:
+- 📱 Device information
+- 🔄 Steps to reproduce
+- 📷 Screenshots (if applicable)
+- 📋 Error logs
+
+---
+
+## ⭐ Star This Project
+
+If you found this project helpful, please consider giving it a ⭐ on GitHub!
+
+---
+
+<div align="center">
+  
+**🎉 Happy Coding! 🎉**
+
+Made with 💖 using Flutter
+
+</div>
 
 ### 🔄 **Development Lifecycle**
 
