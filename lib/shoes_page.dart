@@ -1,11 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-class ShoesPage extends StatelessWidget {
+class ShoesPage extends StatefulWidget {
   final String image;
   final String tag;
 
   const ShoesPage({Key? key, required this.image, required this.tag}) : super(key: key);
+
+  @override
+  State<ShoesPage> createState() => _ShoesPageState();
+}
+
+class _ShoesPageState extends State<ShoesPage> {
+  String selectedSize = '42';
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +20,12 @@ class ShoesPage extends StatelessWidget {
       body: Stack(
         children: [
           Hero(
-            tag: tag,
+            tag: widget.tag,
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: double.infinity,
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+                image: DecorationImage(image: AssetImage(widget.image), fit: BoxFit.cover),
                 boxShadow: [BoxShadow(color: Colors.grey.shade400, blurRadius: 10, offset: Offset(0, 10))],
               ),
             ),
@@ -55,7 +62,7 @@ class ShoesPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomRight,
-                    colors: [Colors.black.withOpacity(.9), Colors.black.withOpacity(.0)],
+                    colors: [Colors.black.withValues(alpha: 0.9), Colors.black.withValues(alpha: 0.0)],
                   ),
                 ),
                 child: Column(
@@ -75,7 +82,7 @@ class ShoesPage extends StatelessWidget {
                     Row(
                       children: [
                         buildSizeButton("40", 1450),
-                        buildSizeButton("42", 1500, isSelected: true),
+                        buildSizeButton("42", 1500),
                         buildSizeButton("44", 1550),
                         buildSizeButton("46", 1600),
                       ],
@@ -89,7 +96,7 @@ class ShoesPage extends StatelessWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               title: Text("Order Placed!"),
-                              content: Text("Thank you for your purchase!"),
+                              content: Text("Thank you for your purchase of size $selectedSize."),
                               actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))],
                             ),
                           );
@@ -116,24 +123,32 @@ class ShoesPage extends StatelessWidget {
     );
   }
 
-  Widget buildSizeButton(String size, int delay, {bool isSelected = false}) {
+  Widget buildSizeButton(String size, int delay) {
+    final isSelected = selectedSize == size;
     return FadeInUp(
       duration: Duration(milliseconds: delay),
-      child: Container(
-        width: 40,
-        height: 40,
-        margin: EdgeInsets.only(right: 15),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          border: isSelected ? null : Border.all(color: Colors.white.withOpacity(0.6), width: 2),
-        ),
-        child: Center(
-          child: Text(
-            size,
-            style: TextStyle(
-              color: isSelected ? Colors.black : Colors.white,
-              fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedSize = size;
+          });
+        },
+        child: Container(
+          width: 40,
+          height: 40,
+          margin: EdgeInsets.only(right: 15),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            border: isSelected ? null : Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
+          ),
+          child: Center(
+            child: Text(
+              size,
+              style: TextStyle(
+                color: isSelected ? Colors.black : Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
